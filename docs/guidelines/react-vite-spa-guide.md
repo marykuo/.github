@@ -6,12 +6,11 @@
   * [目錄結構](#目錄結構)
   * [Routes Configuration](#routes-configuration)
   * [Component 抽離原則](#component-抽離原則)
-  * [架構演進策略（避免 Over-design）](#架構演進策略避免-over-design)
+  * [架構演進策略 (避免 Over-design)](#架構演進策略-避免-over-design)
   * [模組匯出規範 (Module Exporting)](#模組匯出規範-module-exporting)
 * [開發工具配置 (Development Tooling)](#開發工具配置-development-tooling)
   * [路徑別名 (Path Alias) 規範](#路徑別名-path-alias-規範)
   * [完整的 jsconfig.json 模板](#完整的-jsconfigjson-模板)
-  * [jsconfig 配置逐行詳解](#jsconfig-配置逐行詳解)
 
 ## Feature-First 架構
 
