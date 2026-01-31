@@ -1,14 +1,25 @@
 # Vite + React 開發規範
 
-## Feature-First 架構
+## 目錄
 
-### 核心哲學
+* [Feature-First 架構](#feature-first-架構)
+  * [目錄結構](#目錄結構)
+  * [Routes Configuration](#routes-configuration)
+  * [Component 抽離原則](#component-抽離原則)
+  * [架構演進策略（避免 Over-design）](#架構演進策略避免-over-design)
+  * [模組匯出規範 (Module Exporting)](#模組匯出規範-module-exporting)
+* [開發工具配置 (Development Tooling)](#開發工具配置-development-tooling)
+  * [路徑別名 (Path Alias) 規範](#路徑別名-path-alias-規範)
+  * [完整的 jsconfig.json 模板](#完整的-jsconfigjson-模板)
+  * [jsconfig 配置逐行詳解](#jsconfig-配置逐行詳解)
+
+## Feature-First 架構
 
 以模組為核心（Module-based Structure），並允許頁面擁有私有 Component（Page-specific Components）。
 
 在需求不明確或專案快速迭代時，這套架構能兼顧「開發速度」與「擴展韌性」。
 
-### 目錄結構規範
+### 目錄結構
 
 ```plaintext
 src/
@@ -26,9 +37,11 @@ src/
 │ └── Home.jsx             # 獨立小型頁面 (未達模組化規模時)
 ```
 
-### Routes Configuration (App.jsx)
+### Routes Configuration
 
-利用 React Router 的巢狀特性 (Nested Routes) 對應目錄結構：
+利用 React Router 的巢狀特性 (Nested Routes) 對應目錄結構。
+
+App.jsx
 
 ```javascript
 <Routes>
@@ -46,7 +59,7 @@ src/
 </Routes>
 ```
 
-### Component 抽離決策原則
+### Component 抽離原則
 
 當你在編寫頁面發現某段 JSX 可以獨立時，遵循以下路徑進行抽離：
 
