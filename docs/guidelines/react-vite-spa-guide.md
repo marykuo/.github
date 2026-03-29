@@ -2,68 +2,63 @@
 
 ## 目錄
 
-* [Feature-First 架構](#feature-first-架構)
-  * [目錄結構](#目錄結構)
-  * [Routes Configuration](#routes-configuration)
-  * [Component 抽離原則](#component-抽離原則)
-  * [架構演進策略 (避免 Over-design)](#架構演進策略-避免-over-design)
-  * [模組匯出規範 (Module Exporting)](#模組匯出規範-module-exporting)
-* [開發工具配置 (Development Tooling)](#開發工具配置-development-tooling)
-  * [路徑別名 (Path Alias) 規範](#路徑別名-path-alias-規範)
-  * [完整的 jsconfig.json 模板](#完整的-jsconfigjson-模板)
+- [Project Structure](#project-structure)
+  - [Feature-First](#feature-first)
+  - [Routes Configuration](#routes-configuration)
+  - [Component 抽離原則](#component-抽離原則)
+  - [架構演進策略 (避免 Over-design)](#架構演進策略-避免-over-design)
+  - [模組匯出規範 (Module Exporting)](#模組匯出規範-module-exporting)
+- [Code Style](#code-style)
+  - [命名規範](#命名規範)
+  - [寫法](#寫法)
+- [開發工具配置 (Development Tooling)](#開發工具配置-development-tooling)
+  - [路徑別名 (Path Alias) 規範](#路徑別名-path-alias-規範)
+  - [完整的 jsconfig.json 模板](#完整的-jsconfigjson-模板)
 
-## Feature-First 架構
+## Project Structure
 
-以模組為核心（Module-based Structure），並允許頁面擁有私有 Component（Page-specific Components）。
+### Feature-First
 
-在需求不明確或專案快速迭代時，這套架構能兼顧「開發速度」與「擴展韌性」。
-
-### 目錄結構
+為兼顧「開發速度」與「擴展韌性」，以模組為核心（Module-based Structure），並允許頁面擁有私有 Component（Page-specific Components）。
 
 ```plaintext
-src/
-├── components/            # Global 通用、基礎 Component (Button, Input)
-├── pages/
-│ ├── Product/             # Module
-│ │ ├── components/        # Module 私有 Component (僅在 Module 內部 reuse)
-│ │ │ ├── PriceTag.jsx
-│ │ │ └── ProductCard.jsx
-│ │ ├── List.jsx           # 頁面主體
-│ │ ├── Detail.jsx
-│ │ └── index.js           # Module's Entry Point
-│ ├── Auth/
-│ │ ├── ...
-│ └── Home.jsx             # 獨立小型頁面 (未達模組化規模時)
+./
+├── app/
+│   ├── assets/              # 圖片、字型等靜態資源
+│   ├── components/          # Global 通用、基礎 Component (Button, Input, Navbar)
+│   ├── features/            # 核心功能模組 (取代 modules)
+│   │   └── product/
+│   │       ├── api/         # 該功能專屬 API
+│   │       ├── components/  # 該功能專屬 UI
+│   │       └── hooks/       # 該功能專屬邏輯
+│   ├── hooks/               # Global Hooks
+│   ├── i18n/
+│   ├── styles/              # Global Styles (如 CSS Reset, Theme Variables)
+│   ├── utils/               # Global Utils (如表單驗證規則)
+│   ├── routes.js            # Routes
+│   ├── root.jsx             # Data Mode 叫 App.jsx，負責全域 Provider/Layout
+│   └── entry.client.jsx     # Data Mode 叫 main.jsx，但內容都只負責渲染 App
+├── docs/                    # 專案相關文件、開發文件
+├── index.html               # HTML 模板
+├── public/                  # 靜態資源 (favicon, robots.txt)
+├── tests/                   # 測試相關 (單元測試、整合測試)
+├── .eslintrc.js             # ESLint 配置
+├── .prettierrc              # Prettier 配置
+├── jsconfig.json            # VS Code 路徑別名配置
+├── package.json
+└── vite.config.js           # Vite 配置
 ```
 
 ### Routes Configuration
 
-利用 React Router 的巢狀特性 (Nested Routes) 對應目錄結構。
-
-App.jsx
-
-```javascript
-<Routes>
-  {/* Product Module */}
-  <Route path="/product">
-    <Route index element={<ProductList />} />
-    <Route path=":id" element={<ProductDetail />} />
-  </Route>
-
-  {/* Auth Module */}
-  <Route path="/auth">
-    <Route path="login" element={<Login />} />
-    <Route path="register" element={<Register />} />
-  </Route>
-</Routes>
-```
+無論使用 Data mode 或 Framework mode，路由定義統一放在 `app/routes.js`。
 
 ### Component 抽離原則
 
 當你在編寫頁面發現某段 JSX 可以獨立時，遵循以下路徑進行抽離：
 
-1. 若該 Component 僅在 `Product` 相關頁面出現，放在 `pages/Product/components/`。
-2. 若該 Component 在不同 Module（如 `Product` 與 `Member`）皆有需求，提升至 `src/components/`。
+1. 若該 Component 僅在 `Product` 相關頁面出現，放在 `app/features/product/components/`。
+2. 若該 Component 在不同 Module（如 `Product` 與 `Member`）皆有需求，提升至 `app/components/`。
 
 補充：
 
@@ -77,7 +72,7 @@ App.jsx
 
 ### 模組匯出規範 (Module Exporting)
 
-本專案採用 Barrel Export 模式，透過資料夾下的 `index.js` 統一對外入口，確保模組的高內聚與引用簡潔。
+專案採用 Barrel Export 模式，透過資料夾下的 `index.js` 統一對外入口，確保模組的高內聚與引用簡潔。
 
 #### 原則：`index.js` 僅作為轉運站 (Re-exporting)
 
@@ -106,11 +101,45 @@ import { ProductList, ProductDetail } from "@/pages/Product";
 
 ---
 
+## Code Style
+
+### 命名規範
+
+| 對象       | 規範             | 範例                            |
+| ---------- | ---------------- | ------------------------------- |
+| Folder     | kebab-case       | app/user-profile/               |
+| Component  | PascalCase       | UserProfile.jsx                 |
+| Hook, Util | camelCase        | useFetchData.js, stringUtils.js |
+| 常數, 設定 | UPPER_SNAKE_CASE | `export const API_URL = ""`     |
+
+### 寫法
+
+#### setState
+
+```javascript
+// 錯誤示範：直接賦值
+// 這樣可能導致 state 更新不正確，因為 React 的 setState 是異步的，且可能會合併多次更新。
+onChange={(e) => setBill(bill + 10)}
+
+// 正確示範：一律使用 Functional Update 形式，確保 state 更新的正確性與一致性。
+onChange={(e) => setBill(prevBill => prevBill + 10)}
+
+// 補充：在某些情況下（如表單輸入），你可能需要從事件對象中取值。為了避免事件對象被釋放，先將值存起來再使用。
+// 在 React 的舊版本或某些異步情況下，e.target 在回呼函式執行時可能已經被釋放（Nullified）。
+// 雖然在現代 React 版本中這比較少見，但慣例上我們會先將值取出：
+onChange={(e) => {
+  const value = Number(e.target.value); // 先存起來
+  setBill(prevBill => value < 0 ? prevBill : value);
+}}
+```
+
+---
+
 ## 開發工具配置 (Development Tooling)
 
 ### 路徑別名 (Path Alias) 規範
 
-為了避免深度嵌套導致的 `../../../../` 路徑地獄，本專案統一使用 `@` 作為 `src/` 目錄的別名。
+為了避免深度嵌套導致的 `../../../../` 路徑地獄，專案統一使用 `@` 作為 `app/` 目錄的別名。
 
 Vite 配置範例 (vite.config.js)
 
@@ -121,8 +150,8 @@ import path from "path";
 export default defineConfig({
   resolve: {
     alias: {
-      // 將 @ 映射到 src 資料夾
-      "@": path.resolve(__dirname, "./src"),
+      // 將 @ 映射到 app 資料夾
+      "@": path.resolve(__dirname, "./app"),
     },
   },
 });
@@ -137,7 +166,7 @@ IDE Support 配置範例 (`jsconfig.json` 或 `tsconfig.json`)
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["app/*"]
     }
   }
 }
@@ -167,7 +196,7 @@ import { useAuth } from "@/pages/Auth/hooks/useAuth";
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["app/*"]
     },
     "checkJs": true
   },
@@ -205,11 +234,11 @@ import { useAuth } from "@/pages/Auth/hooks/useAuth";
     // 解釋：設定所有相對路徑的根目錄為「當前專案目錄」。
     // 不設定：下方的 paths（別名）會失效，因為它不知道起始點在哪。
 
-    /* 6. paths: { "@/*": ["src/*"] } */
+    /* 6. paths: { "@/*": ["app/*"] } */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["app/*"]
     },
-    // 解釋：最重要的部分！這讓編輯器知道 `@/` 代表 `src/`。
+    // 解釋：最重要的部分！這讓編輯器知道 `@/` 代表 `app/`。
     // 不設定：當你寫 `import '@/components/Button'`，VS Code 會報錯說「找不到模組」，
     // 且你按著 Cmd/Ctrl 點擊路徑時，無法跳轉到該檔案。
 
