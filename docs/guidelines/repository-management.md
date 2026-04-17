@@ -19,6 +19,23 @@
 - `guide`：以教學或文件為主，程式碼為輔。
 - `archived`：停止維護，僅供存檔參考（同步設定 GitHub Archive 狀態）。
 
+## License Selection
+
+為了確保程式碼的法律效力與使用彈性，每個 Repository 必須依性質配置 `LICENSE` 檔案：
+
+| 專案類型                                 | 授權選擇                |
+| :--------------------------------------- | :---------------------- |
+| `awesome-*`                              | **CC0 1.0**             |
+| `lab-*`, `poc-*`, `*-starter`, `*-guide` | **MIT**                 |
+| `pkg-*`, `tool-*`                        | **Apache 2.0** / MIT    |
+| Innovative / Product                     | **GPL v3** / Apache 2.0 |
+
+在 `README.md` 底部應包含以下 License 說明：
+
+```
+This project is licensed under the [License Name] - see the [LICENSE](LICENSE) file for details.
+```
+
 ## Engineering Discipline
 
 ### Git Commit Message Convention
@@ -55,9 +72,9 @@
 
 ## Asset Management
 
-* 靜態資產：存放於 `/assets`。
-* 大型檔案：一律使用 Git LFS。
-* 安全性：禁止將 Secrets (API Keys, .env) 推送至 Repo，只使用範例檔示意。
+- 靜態資產：存放於 `/assets`。
+- 大型檔案：一律使用 Git LFS。
+- 安全性：禁止將 Secrets (API Keys, .env) 推送至 Repo，只使用範例檔示意。
 
 ## GitHub Topics 配置準則
 
@@ -65,28 +82,28 @@
 
 ### 1. 核心技術 (Core Stack)
 
-* 語言：`typescript`, `javascript`, `java`, `python`, `go`
-* 框架：`react`, `spring-boot`, `nextjs`
-* 建置工具：`vite`, `maven`, `gradle`
+- 語言：`typescript`, `javascript`, `java`, `python`, `go`
+- 框架：`react`, `spring-boot`, `nextjs`
+- 建置工具：`vite`, `maven`, `gradle`
 
 ### 2. 專案性質與用途 (Project Nature)
 
-* 領域 (Domain)：`frontend`, `backend`, `sre`, `data-engineering`
-* 類型 (Type)：`spa`, `microservice`, `cli-tool`, `library`
-* 模板 (Template)：`starter`, `boilerplate`
+- 領域 (Domain)：`frontend`, `backend`, `sre`, `data-engineering`
+- 類型 (Type)：`spa`, `microservice`, `cli-tool`, `library`
+- 模板 (Template)：`starter`, `boilerplate`
 
 ### 3. 生態系與工具 (Ecosystem & Tooling)
 
 專案中關鍵的第三方整合。
 
-* 狀態/資料：`zustand`, `tanstack-query`, `jpa`
-* 樣式/UI：`tailwind-css`, `styled-components`
-* 測試/規範：`vitest`, `playwright`, `eslint`, `prettier`
+- 狀態/資料：`zustand`, `tanstack-query`, `jpa`
+- 樣式/UI：`tailwind-css`, `styled-components`
+- 測試/規範：`vitest`, `playwright`, `eslint`, `prettier`
 
 ## GitHub Sidebar 顯示策略
 
 側邊欄 (Sidebar) 應僅保留具備實質資訊的區塊，以降低視覺雜訊。
 
-* Releases：預設關閉，僅具備「可交付產物」或具備版本演進意義的專案時開啟。
-* Packages：預設關閉，僅當專案實質發佈至 GitHub Packages 託管時開啟。
-* Deployments：預設關閉，僅當存在「可存取之公開 URL」時開啟。
+- Releases：預設關閉，僅具備「可交付產物」或具備版本演進意義的專案時開啟。
+- Packages：預設關閉，僅當專案實質發佈至 GitHub Packages 託管時開啟。
+- Deployments：預設關閉，僅當存在「可存取之公開 URL」時開啟。
